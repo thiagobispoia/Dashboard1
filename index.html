@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard de Notas — Prof. Thiago Bispo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-blue"></div>
+  <div class="ambient ambient-orange"></div>
+  <div class="ambient ambient-purple"></div>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+      </svg>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" data-view="overview" title="Visão Geral" aria-label="Visão Geral">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </button>
+      <button class="nav-btn" data-view="turmas" title="Turmas" aria-label="Turmas">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </button>
+      <button class="nav-btn" data-view="overview" data-scroll="charts" title="Análises" aria-label="Análises">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </button>
+      <button class="nav-btn" data-view="turmas" data-scroll="turma-alunos" title="Lista de Alunos" aria-label="Lista de Alunos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </button>
+      <button class="nav-btn" data-view="overview" data-scroll="ranking" title="Ranking" aria-label="Ranking">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="nav-btn" title="Prof. Thiago Bispo" aria-label="Perfil">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      </button>
+      <div class="avatar" title="Prof. Thiago Bispo">TB</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Painel Acadêmico</p>
+        <h1 id="pageTitle">Dashboard de Notas — Prof. Thiago Bispo</h1>
+        <p class="subtitle" id="pageSubtitle">Clique nos gráficos para filtrar · Filtros ativos sincronizam todos os cards</p>
+      </div>
+      <div class="header-meta">
+        <span id="clock" class="clock"></span>
+        <button id="btnReset" class="btn-reset" type="button">Limpar filtros</button>
+      </div>
+    </header>
+
+    <!-- ========== VISÃO GERAL ========== -->
+    <div id="view-overview" class="view active">
+      <section class="filters glass-card" aria-label="Filtros">
+        <div class="filter-group">
+          <label for="filterSerie">Série</label>
+          <select id="filterSerie">
+            <option value="">Todas</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filterTurma">Turma</label>
+          <select id="filterTurma">
+            <option value="">Todas</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filterDisciplina">Disciplina</label>
+          <select id="filterDisciplina">
+            <option value="">Média Geral</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filterStatus">Situação</label>
+          <select id="filterStatus">
+            <option value="">Todas</option>
+            <option value="aprovado">Aprovado (≥ 7)</option>
+            <option value="recuperacao">Recuperação (5–6,9)</option>
+            <option value="reprovado">Reprovado (&lt; 5)</option>
+          </select>
+        </div>
+        <div class="active-chips" id="activeChips"></div>
+      </section>
+
+      <section class="kpi-grid" aria-label="Indicadores">
+        <article class="glass-card kpi-card">
+          <div class="kpi-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div>
+            <p class="kpi-label">Total de Alunos</p>
+            <p class="kpi-value" id="kpiTotal">—</p>
+          </div>
+        </article>
+        <article class="glass-card kpi-card">
+          <div class="kpi-icon purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div>
+            <p class="kpi-label">Média da Turma</p>
+            <p class="kpi-value" id="kpiMedia">—</p>
+          </div>
+        </article>
+        <article class="glass-card kpi-card kpi-ring">
+          <div class="ring-wrap">
+            <canvas id="kpiRing" width="72" height="72"></canvas>
+            <span id="kpiAprovacaoPct">—</span>
+          </div>
+          <div>
+            <p class="kpi-label">Taxa de Aprovação</p>
+            <p class="kpi-sub" id="kpiAprovacaoDetail">—</p>
+          </div>
+        </article>
+        <article class="glass-card kpi-card">
+          <div class="kpi-icon orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div>
+            <p class="kpi-label">Melhor Desempenho</p>
+            <p class="kpi-value small" id="kpiTop">—</p>
+            <p class="kpi-sub" id="kpiTopNota">—</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="charts-grid" id="charts">
+        <article class="glass-card chart-card span-2">
+          <div class="card-head">
+            <div>
+              <h2>Média por Disciplina</h2>
+              <p>Clique em uma barra para filtrar por disciplina</p>
+            </div>
+          </div>
+          <div class="chart-box">
+            <canvas id="chartDisciplinas"></canvas>
+          </div>
+        </article>
+
+        <article class="glass-card chart-card">
+          <div class="card-head">
+            <div>
+              <h2>Por Série</h2>
+              <p>Clique no segmento para filtrar</p>
+            </div>
+          </div>
+          <div class="chart-box donut">
+            <canvas id="chartSeries"></canvas>
+          </div>
+        </article>
+
+        <article class="glass-card chart-card">
+          <div class="card-head">
+            <div>
+              <h2>Situação Acadêmica</h2>
+              <p>Clique para filtrar por status</p>
+            </div>
+          </div>
+          <div class="chart-box donut">
+            <canvas id="chartStatus"></canvas>
+          </div>
+        </article>
+
+        <article class="glass-card chart-card">
+          <div class="card-head">
+            <div>
+              <h2>Média por Turma</h2>
+              <p>Clique para abrir o detalhe da turma</p>
+            </div>
+          </div>
+          <div class="chart-box">
+            <canvas id="chartTurmas"></canvas>
+          </div>
+        </article>
+
+        <article class="glass-card chart-card span-2">
+          <div class="card-head">
+            <div>
+              <h2>Distribuição de Notas</h2>
+              <p>Faixas de desempenho · clique para refinar a situação</p>
+            </div>
+          </div>
+          <div class="chart-box">
+            <canvas id="chartDistribuicao"></canvas>
+          </div>
+        </article>
+
+        <article class="glass-card chart-card span-2" id="ranking">
+          <div class="card-head">
+            <div>
+              <h2>Ranking — Top 10 Alunos</h2>
+              <p>Conforme filtros ativos</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table id="rankingTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Aluno</th>
+                  <th>Série</th>
+                  <th>Turma</th>
+                  <th>Nota</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="glass-card chart-card">
+          <div class="card-head">
+            <div>
+              <h2>Progresso por Faixa</h2>
+              <p>Percentual em cada situação</p>
+            </div>
+          </div>
+          <div class="progress-list" id="progressList"></div>
+        </article>
+      </section>
+    </div>
+
+    <!-- ========== DETALHE DE TURMAS ========== -->
+    <div id="view-turmas" class="view">
+      <section class="filters glass-card" aria-label="Filtros de turmas">
+        <div class="filter-group">
+          <label for="turmaFilterSerie">Série</label>
+          <select id="turmaFilterSerie">
+            <option value="">Todas as séries</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="turmaFilterLetra">Turma</label>
+          <select id="turmaFilterLetra">
+            <option value="">Todas</option>
+            <option value="A">Turma A</option>
+            <option value="B">Turma B</option>
+            <option value="C">Turma C</option>
+          </select>
+        </div>
+        <p class="filter-hint">Clique em um card de turma para ver o detalhamento completo</p>
+      </section>
+
+      <section class="turma-cards" id="turmaCards" aria-label="Turmas"></section>
+
+      <section class="turma-detail" id="turmaDetail" hidden>
+        <div class="turma-detail-head">
+          <div>
+            <h2 id="turmaDetailTitle">—</h2>
+            <p id="turmaDetailSub">Detalhamento da turma selecionada</p>
+          </div>
+          <button type="button" class="btn-ghost" id="btnClearTurma">Ver todas</button>
+        </div>
+
+        <section class="kpi-grid turma-kpis" aria-label="KPIs da turma">
+          <article class="glass-card kpi-card">
+            <div class="kpi-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <div>
+              <p class="kpi-label">Alunos</p>
+              <p class="kpi-value" id="tkpiAlunos">—</p>
+            </div>
+          </article>
+          <article class="glass-card kpi-card">
+            <div class="kpi-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div>
+              <p class="kpi-label">Média Geral</p>
+              <p class="kpi-value" id="tkpiMedia">—</p>
+            </div>
+          </article>
+          <article class="glass-card kpi-card">
+            <div class="kpi-icon orange">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+              <p class="kpi-label">Aprovação</p>
+              <p class="kpi-value" id="tkpiAprov">—</p>
+              <p class="kpi-sub" id="tkpiAprovDetail">—</p>
+            </div>
+          </article>
+          <article class="glass-card kpi-card">
+            <div class="kpi-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <div>
+              <p class="kpi-label">Destaque</p>
+              <p class="kpi-value small" id="tkpiTop">—</p>
+              <p class="kpi-sub" id="tkpiTopNota">—</p>
+            </div>
+          </article>
+        </section>
+
+        <section class="charts-grid">
+          <article class="glass-card chart-card span-2">
+            <div class="card-head">
+              <div>
+                <h2>Média por Disciplina nesta Turma</h2>
+                <p>Comparativo das 9 disciplinas</p>
+              </div>
+            </div>
+            <div class="chart-box">
+              <canvas id="chartTurmaDisc"></canvas>
+            </div>
+          </article>
+
+          <article class="glass-card chart-card">
+            <div class="card-head">
+              <div>
+                <h2>Situação da Turma</h2>
+                <p>Aprovados · Recuperação · Reprovados</p>
+              </div>
+            </div>
+            <div class="chart-box donut">
+              <canvas id="chartTurmaStatus"></canvas>
+            </div>
+          </article>
+
+          <article class="glass-card chart-card span-2">
+            <div class="card-head">
+              <div>
+                <h2>Comparativo entre Turmas</h2>
+                <p>Média geral de cada turma (série + letra)</p>
+              </div>
+            </div>
+            <div class="chart-box">
+              <canvas id="chartTurmaComparativo"></canvas>
+            </div>
+          </article>
+
+          <article class="glass-card chart-card">
+            <div class="card-head">
+              <div>
+                <h2>Disciplina Mais Fraca</h2>
+                <p>Menor média da turma</p>
+              </div>
+            </div>
+            <div class="weak-subject" id="weakSubject"></div>
+          </article>
+
+          <article class="glass-card chart-card span-3" id="turma-alunos">
+            <div class="card-head">
+              <div>
+                <h2>Alunos da Turma</h2>
+                <p>Lista completa com médias e situação</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table id="turmaAlunosTable">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Matrícula</th>
+                    <th>Aluno</th>
+                    <th>Média</th>
+                    <th>Situação</th>
+                    <th>Melhor Disc.</th>
+                    <th>Pior Disc.</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </section>
+
+      <section class="glass-card chart-card overview-all-turmas" id="turmaOverviewCharts">
+        <div class="card-head">
+          <div>
+            <h2>Visão Comparativa de Todas as Turmas</h2>
+            <p>Selecione um card acima ou clique em uma barra para detalhar</p>
+          </div>
+        </div>
+        <div class="chart-box tall">
+          <canvas id="chartAllTurmas"></canvas>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
